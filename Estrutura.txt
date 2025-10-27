@@ -1,0 +1,55 @@
+com.sistema
+├── entidades
+│   ├── Cliente.java          // Armazena nome completo, telefones, email; composição com Endereco e Localizacao. Responsabilidade: dados pessoais do cliente.
+│   ├── Fatura.java           // Armazena valor base, data vencimento, multas aplicadas, cliente associado. Responsabilidade: detalhes da fatura.
+│   ├── Pagamento.java        // Armazena valor, data, método (descrição: cartão/Mpesa/Emola/numerário), fatura associada. Responsabilidade: registro de transações.
+│   ├── TaxaInstalacao.java   // Armazena valor, tipo, cliente associado. Responsabilidade: custos de instalação.
+│   ├── Abastecimento.java    // Armazena fonte, detalhes de canalização PVC enterrados, consumo agregado. Responsabilidade: infraestrutura de distribuição.
+│   ├── Instalacao.java       // Armazena data, custo (link TaxaInstalacao), abastecimento, contador associado; link com Endereco. Responsabilidade: conexão da fonte à casa.
+│   ├── Localizacao.java      // Armazena latitude/longitude; link com Endereco para mapeamento. Responsabilidade: coordenadas geográficas.
+│   ├── Contrato.java         // Armazena ID, data início/fim, status (ativo/encerrado), cliente associado. Responsabilidade: gerenciar ciclo de vida do contrato.
+│   ├── LeituraContador.java  // Armazena ID, data leitura, m³ consumidos, instalação associada. Responsabilidade: registrar consumos mensais.
+│   └── **Endereco.java**     // Armazena bairro, quarteirão, número da casa. Responsabilidade: detalhes de endereço residencial, com validações básicas.
+├── repositorios
+│   ├── interfaces
+│   │   └── RepositorioInterface.java  // Contratos genéricos para CRUD.
+│   ├── ClienteRepositorio.java        // CRUD para Cliente (inclui composição com Endereco).
+│   ├── FaturaRepositorio.java         // CRUD para Fatura.
+│   ├── PagamentoRepositorio.java      // CRUD para Pagamento.
+│   ├── TaxaInstalacaoRepositorio.java // CRUD para TaxaInstalacao.
+│   ├── AbastecimentoRepositorio.java  // CRUD para Abastecimento.
+│   ├── InstalacaoRepositorio.java     // CRUD para Instalacao (link com Endereco).
+│   ├── LocalizacaoRepositorio.java    // CRUD para Localizacao (link com Endereco).
+│   ├── ContratoRepositorio.java       // CRUD para Contrato, incluindo filtros por status.
+│   ├── LeituraContadorRepositorio.java // CRUD para LeituraContador, com buscas por período.
+│   └── **EnderecoRepositorio.java**   // CRUD para Endereco. Responsabilidade: persistir endereços isoladamente.
+├── servicos
+│   ├── interfaces
+│   │   └── ServicoInterface.java      // Contratos genéricos para lógica.
+│   ├── ClienteServico.java            // Cadastra/consulta clientes, integra com Endereco e Localizacao.
+│   ├── FaturaServico.java             // Gera faturas de leituras, calcula valores/m³ + multas (configurável).
+│   ├── PagamentoServico.java          // Processa pagamentos, atualiza faturas.
+│   ├── TaxaInstalacaoServico.java     // Aplica taxas, ativa fornecimento.
+│   ├── AbastecimentoServico.java      // Monitora canalização PVC, integra com Endereco para rotas.
+│   ├── GeolocalizacaoServico.java     // Exibe mapa via Endereco e Localizacao.
+│   ├── RelatorioServico.java          // Gera relatórios PDF com gráficos.
+│   ├── EnvioServico.java              // Envia por email.
+│   ├── ContratoServico.java           // Inicia/encerra contratos.
+│   └── **EnderecoServico.java**       // Valida e gerencia endereços (ex.: formatação para mapa).
+├── controladores
+│   ├── ClienteControlador.java        // Endpoints para clientes, incluindo endereço.
+│   ├── FaturaControlador.java         // Gera/consulta faturas.
+│   ├── PagamentoControlador.java      // Processa/consulta pagamentos.
+│   ├── AbastecimentoControlador.java  // Monitora abastecimento.
+│   ├── RelatorioControlador.java      // Gera/download PDFs.
+│   ├── EnvioControlador.java          // Envia por email.
+│   ├── ContratoControlador.java       // Gerencia contratos.
+│   └── **EnderecoControlador.java**   // Endpoints para gerenciamento de endereços (se necessário, ex.: atualizações).
+├── interfaces
+│   └── UsuarioInterface.java          // Contratos para UI (inclui visualização de endereço no mapa).
+└── util
+    ├── PdfGerador.java                // Gera/armazena PDFs.
+    ├── EmailEnviador.java             // Envia emails.
+    ├── WhatsAppEnviador.java          // Envia via WhatsApp.
+    ├── GraficoGerador.java            // Gera gráficos.
+    └── ValidadorUtil.java             // Validações (ex.: formato de endereço).

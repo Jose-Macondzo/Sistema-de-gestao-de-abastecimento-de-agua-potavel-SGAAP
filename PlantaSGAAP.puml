@@ -1,0 +1,109 @@
+@startuml
+skinparam monochrome true
+skinparam classAttributeIconSize 0
+skinparam nodesep 50
+skinparam ranksep 50
+
+package "com.sgaap.entidades" {
+
+  class Cliente {
+    - id: Long
+    - nomeCompleto: String
+    - telefones: List<String>
+    - email: String
+    + validarDados(): boolean
+    + toStringFormatado(): String
+  }
+
+  class Endereco {
+    - id: Long
+    - bairro: String
+    - quarteirao: String
+    - numeroCasa: String
+    + validarEndereco(): boolean
+    + toStringFormatado(): String
+  }
+
+  class Localizacao {
+    - id: Long
+    - latitude: Double
+    - longitude: Double
+    + calcularDistancia(outra: Localizacao): Double
+  }
+
+  class Contrato {
+    - id: Long
+    - dataInicio: LocalDate
+    - dataFim: LocalDate
+    - status: Enum<Ativo, Encerrado>
+    + ativar(): void
+    + encerrar(): void
+    + isAtivo(): boolean
+  }
+
+  class TaxaInstalacao {
+    - id: Long
+    - valor: BigDecimal
+    - tipo: String
+    + calcularTotal(): BigDecimal
+  }
+
+  class Instalacao {
+    - id: Long
+    - dataInstalacao: LocalDate
+    - custo: BigDecimal
+    - detalhesCanalizacao: String // Ex.: "Tubos PVC enterrados da fonte à casa"
+    + validarInstalacao(): boolean
+  }
+
+  class Abastecimento {
+    - id: Long
+    - fonteAgua: String
+    - consumoAgregado: Double // m³ total
+    - detalhesInfra: String // Ex.: "Canalização PVC enterrada"
+    + monitorarConsumo(): Double
+  }
+
+  class LeituraContador {
+    - id: Long
+    - dataLeitura: LocalDate
+    - metrosCubicos: Double
+    + calcularConsumoAnterior(anterior: LeituraContador): Double
+  }
+
+  class Fatura {
+    - id: Long
+    - valorBase: BigDecimal
+    - dataVencimento: LocalDate
+    - multasAplicadas: BigDecimal
+    + calcularMulta(diasAtraso: int): BigDecimal // Lógica: 10% aos 15, +10% aos 20, +30% aos 25
+    + isEmDivida(): boolean
+  }
+
+  class Pagamento {
+    - id: Long
+    - valor: BigDecimal
+    - dataPagamento: LocalDate
+    - metodo: String // Ex.: "Cartão", "Mpesa", "Emola", "Numerário"
+    + validarPagamento(): boolean
+  }
+
+}
+
+' Relações (coesão mínima: composição para dependências fortes, associação para fracas)
+Cliente *-- Endereco : compõe
+Cliente *-- Localizacao : compõe
+Cliente "1" -- "1" Contrato : possui
+Contrato "1" -- "1" TaxaInstalacao : requer pagamento
+Contrato "1" -- "1" Instalacao : ativa
+Instalacao "1" -- "1" Abastecimento : conecta via canalização PVC
+Instalacao "1" -- "*" LeituraContador : registra
+LeituraContador "1" -- "1" Fatura : gera
+Fatura "1" -- "*" Pagamento : recebe
+Endereco -- Localizacao : associa para mapa
+
+note top of Instalacao : Responsável pela conexão física: tubos PVC enterrados da fonte à casa do cliente.
+note bottom of Fatura : Lógica de multas em serviço separado para manutenção fácil.
+note left of Pagamento : Métodos como descrição simples, sem integração externa aqui.
+
+@enduml
