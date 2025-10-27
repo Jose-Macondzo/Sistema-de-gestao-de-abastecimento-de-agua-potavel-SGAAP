@@ -3,11 +3,7 @@ package com.sgaap.entidades;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Entidade que representa o cliente do sistema SGAAP, contendo dados pessoais como nome, telefones e email.
- * Compõe Endereco e Localizacao para endereço residencial e geolocalização.
- * Responsável apenas por armazenar e validar dados do cliente, sem lógica de negócio externa.
- */
+
 public class Cliente implements Serializable {
     private Long id;                  // Identificador único para persistência
     private String nomeCompleto;      // Nome completo do cliente (ex.: "João Silva")
